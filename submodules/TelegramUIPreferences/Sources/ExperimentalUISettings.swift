@@ -150,7 +150,7 @@ public struct ExperimentalUISettings: Codable, Equatable {
             coreListChatBackend: false,
             inputDecTextBackend: false,
             forceRLottieBackend: false,
-            forceTLottieBackend: false,
+            forceTLottieBackend: true,
             enableRareCodeLanguages: false,
             respectSystemMicrophone: false,
             springSendAnimation: false,

@@ -4,11 +4,7 @@ public struct NetworkEngineSettings: Codable, Equatable {
     public var engine: NetworkEngineKind
     
     public static var defaultSettings: NetworkEngineSettings {
-        #if os(macOS)
         return NetworkEngineSettings(engine: .rust)
-        #else
-        return NetworkEngineSettings(engine: .mtProtoKit)
-        #endif
     }
     
     public init(engine: NetworkEngineKind) {
