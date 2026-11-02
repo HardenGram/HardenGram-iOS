@@ -27,6 +27,9 @@ public func instantPageSyntaxHighlightSpecs(for blocks: [InstantPageBlock]) -> [
                 guard let language = normalizedCodeBlockLanguage(language), !text.plainText.isEmpty else {
                     continue
                 }
+                if isRareCodeLanguage(language) && !rareCodeLanguagesEnabled() {
+                    continue
+                }
                 let spec = CachedMessageSyntaxHighlight.Spec(language: language, text: text.plainText)
                 if seen.insert(spec).inserted {
                     specs.append(spec)

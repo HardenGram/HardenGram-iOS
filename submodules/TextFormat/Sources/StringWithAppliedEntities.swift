@@ -80,6 +80,21 @@ public func chatInputStateStringWithAppliedEntities(_ text: String, entities: [M
     return string
 }
 
+private let commonCodeLanguages: Set<String> = [
+    "swift","python","javascript","typescript","java","c","cpp","csharp",
+    "go","rust","kotlin","ruby","php","html","css","json","bash","sql",
+    "markdown","yaml"
+]
+
+public func isRareCodeLanguage(_ language: String) -> Bool {
+    let normalized = language.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    return !commonCodeLanguages.contains(normalized)
+}
+
+public func rareCodeLanguagesEnabled() -> Bool {
+    return UserDefaults.standard.bool(forKey: "enableRareCodeLanguages")
+}
+
 private let syntaxHighlighter = Syntaxer()
 
 private func isValidMessageSyntaxHighlightRange(_ range: Range<Int>, expectedLength: Int) -> Bool {
@@ -106,6 +121,9 @@ private func generateMessageSyntaxHighlight(spec: CachedMessageSyntaxHighlight.S
     // Languages historically arrived lowercase from markdown fences, which is why this stayed hidden; a
     // code block's language field carries what its author typed.
     let engineLanguage = normalizedCodeBlockLanguage(spec.language) ?? spec.language
+    if let normalized = normalizedCodeBlockLanguage(spec.language), isRareCodeLanguage(normalized), !rareCodeLanguagesEnabled() {
+        return MessageSyntaxHighlight(entities: [])
+    }
     guard let highlightedString = syntaxHighlighter.syntax(spec.text, language: engineLanguage, theme: theme) else {
         return MessageSyntaxHighlight(entities: [])
     }
@@ -701,6 +719,9 @@ public func extractMessageSyntaxHighlightSpecs(text: String, entities: [MessageT
     let nsString = text as NSString
     for entity in entities {
         if case let .Pre(language) = entity.type, let language, !language.isEmpty {
+            if isRareCodeLanguage(language) && !rareCodeLanguagesEnabled() {
+                continue
+            }
             var range = entity.range
             if range.lowerBound < 0 {
                 range = 0 ..< range.upperBound
