@@ -186,15 +186,18 @@ const Grammar* LanguageTree::resolveGrammar(size_t path)
 bool LanguageTree::allowRareLanguages = false;
 
 static bool isRareLanguageName(const std::string& key) {
-    static const char* rare[] = {
-        "brainfuck","lolcode","bqn","gap","magma","ichigojam","inform7",
-        "false","factor","hoon","j","mizar","nevod","parigp","q","smalltalk",
-        "wren","zig","brightscript",
+    // Keep only a small set of the most popular languages enabled by default.
+    // Everything else is treated as "rare" and is disabled unless the Debug menu
+    // toggle re-enables rare languages (with a warning).
+    static const char* common[] = {
+        "swift","python","javascript","typescript","java","c","cpp","csharp",
+        "go","rust","kotlin","ruby","php","html","css","json","bash","sql",
+        "markdown","yaml",
     };
-    for (const char* r : rare) {
-        if (key == r) return true;
+    for (const char* c : common) {
+        if (key == c) return false;
     }
-    return false;
+    return true;
 }
 
 bool LanguageTree::isRareLanguage(const std::string& key) {
