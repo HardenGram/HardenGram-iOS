@@ -18,6 +18,8 @@
 @end
 
 @interface Syntaxer : NSObject
++ (void)setAllowRareLanguages:(BOOL)value;
++ (BOOL)allowRareLanguages;
 -(id)init;
 -(NSAttributedString *)syntax:(NSString *)code language: (NSString *)language theme:(SyntaxterTheme *) theme;
 

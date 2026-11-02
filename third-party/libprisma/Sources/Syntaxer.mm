@@ -7,6 +7,7 @@
 
 #import <libprisma/Syntaxer.h>
 #import "SyntaxHighlighter.h"
+#include "LanguageTree.h"
 #import "TokenList.h"
 
 UIColor * color(UInt32 rgb, UInt32 alpha) {
@@ -241,5 +242,15 @@ Brush *makeBrush(std::string alias, std::string type, SyntaxterTheme * theme, Br
     }
 }
 
+
+
++ (void)setAllowRareLanguages:(BOOL)value {
+    SyntaxHighlighter::setAllowRareLanguages(value);
+    LanguageTree::setAllowRareLanguages(value);
+}
+
++ (BOOL)allowRareLanguages {
+    return SyntaxHighlighter::allowRareLanguages() ? YES : NO;
+}
 
 @end

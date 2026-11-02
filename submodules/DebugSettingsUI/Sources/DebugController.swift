@@ -736,6 +736,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case springSendAnimation(Bool)
     case fakeWalletTransfers(Bool)
     case forceRLottieBackend(Bool)
+    case enableRareCodeLanguages(Bool)
     case respectSystemMicrophone(Bool)
     case useModernVideoMessagePipeline(Bool)
     case videoMessageCameraMode(ExperimentalUISettings.VideoMessageCameraMode)
@@ -786,7 +787,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.web.rawValue
         case .experimentsHeader, .keepChatNavigationStack, .skipReadHistory, .alwaysDisplayTyping, .debugRatingLayout, .crashOnSlowQueries, .crashOnMemoryPressure:
             return DebugControllerSection.experiments.rawValue
-        case .crash, .resetBiometricsData, .photoPreview, .knockoutWallpaper, .compressedEmojiCache, .storiesJpegExperiment, .checkSerializedData, .enableQuickReactionSwitch, .experimentalCompatibility, .enableDebugDataDisplay, .fakeGlass, .forceClearGlass, .debugRipple, .inputDecEngineEditor, .coreListChatBackend, .forceRLottieBackend, .respectSystemMicrophone, .useModernVideoMessagePipeline, .videoMessageCameraMode, .browserExperiment, .allForumsHaveTabs, .enableReactionOverrides, .disableReloginTokens, .liveStreamV2, .experimentalCallMute, .groupCallReferenceEngine, .playerV2, .devRequests, .enableUpdates, .pwa, .enableLocalTranslation, .testPasscodeMigration:
+        case .crash, .resetBiometricsData, .photoPreview, .knockoutWallpaper, .compressedEmojiCache, .storiesJpegExperiment, .checkSerializedData, .enableQuickReactionSwitch, .experimentalCompatibility, .enableDebugDataDisplay, .fakeGlass, .forceClearGlass, .debugRipple, .inputDecEngineEditor, .coreListChatBackend, .forceRLottieBackend, .enableRareCodeLanguages, .respectSystemMicrophone, .useModernVideoMessagePipeline, .videoMessageCameraMode, .browserExperiment, .allForumsHaveTabs, .enableReactionOverrides, .disableReloginTokens, .liveStreamV2, .experimentalCallMute, .groupCallReferenceEngine, .playerV2, .devRequests, .enableUpdates, .pwa, .enableLocalTranslation, .testPasscodeMigration:
             return DebugControllerSection.experiments.rawValue
         case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers:
             return DebugControllerSection.experiments.rawValue
@@ -843,6 +844,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return 22
         case .forceRLottieBackend:
             return 23
+        case .enableRareCodeLanguages:
+            return 24
         case .respectSystemMicrophone:
             return 24
         case .useModernVideoMessagePipeline:
@@ -1467,6 +1470,10 @@ private enum DebugControllerEntry: ItemListNodeEntry {
                     })
                 }).start()
             })
+        case let .enableRareCodeLanguages(value):
+            return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Code blocks: enable rare languages (warning)", value: value, sectionId: self.section, style: .blocks, updated: { value in
+                UserDefaults.standard.set(value, forKey: "enableRareCodeLanguages")
+            })
         case let .respectSystemMicrophone(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Recording: respect system microphone", value: value, sectionId: self.section, style: .blocks, updated: { value in
                 let _ = arguments.sharedContext.accountManager.transaction ({ transaction in
@@ -1918,6 +1925,7 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
     }
     entries.append(.coreListChatBackend(experimentalSettings.coreListChatBackend))
     entries.append(.forceRLottieBackend(experimentalSettings.forceRLottieBackend))
+    entries.append(.enableRareCodeLanguages(UserDefaults.standard.bool(forKey: "enableRareCodeLanguages")))
     entries.append(.respectSystemMicrophone(experimentalSettings.respectSystemMicrophone))
     let useModernVideoMessagePipeline = (experimentalSettings.useModernVideoMessagePipeline ?? (context?.getAppConfigValue("ios_killswitch_disable_neo_round_camera_v2") == nil)) && experimentalSettings.videoMessageCameraMode != .legacy
     entries.append(.useModernVideoMessagePipeline(useModernVideoMessagePipeline))
