@@ -23,6 +23,13 @@ public:
 
     TokenList tokenize(const std::string& text, const std::string& language);
 
+    // Rare-language hardening toggles (Debug menu can re-enable with warning).
+    static void setAllowRareLanguages(bool value);
+    static bool allowRareLanguages();
+    static void setRareLanguagesEnabled(bool value) { setAllowRareLanguages(value); }
+    static bool rareLanguagesEnabled() { return allowRareLanguages(); }
+    static void enableRareLanguages(bool value) { setAllowRareLanguages(value); }
+
     std::map<std::string, std::string> languages() const;
 
 private:

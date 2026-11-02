@@ -2,6 +2,9 @@
 #include "LanguageTree.h"
 #include "TokenList.h"
 
+void SyntaxHighlighter::setAllowRareLanguages(bool value) { LanguageTree::setAllowRareLanguages(value); }
+bool SyntaxHighlighter::allowRareLanguages() { return LanguageTree::areRareLanguagesAllowed(); }
+
 SyntaxHighlighter::SyntaxHighlighter(const std::string& path)
 {
     m_tree = std::make_shared<LanguageTree>();

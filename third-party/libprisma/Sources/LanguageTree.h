@@ -18,6 +18,16 @@ public:
 
     void load(const std::string& content);
 
+    // Rare/obscure languages can be disabled by default for hardening; the
+    // Debug menu can re-enable them (with a warning) at runtime.
+    static bool allowRareLanguages;
+    static void setAllowRareLanguages(bool value) { allowRareLanguages = value; }
+    static bool areRareLanguagesAllowed() { return allowRareLanguages; }
+
+    // Whether a language is considered "rare" (excluded unless explicitly
+    // re-enabled). Centralised here so find()/keys() agree.
+    static bool isRareLanguage(const std::string& key);
+
     const Pattern* resolvePattern(size_t path);
     const Grammar* resolveGrammar(size_t path);
 
@@ -32,6 +42,11 @@ public:
                 continue;
             }
 
+            if (!allowRareLanguages && isRareLanguage(kv.first))
+            {
+                continue;
+            }
+
             keys.emplace(kv.first, kv.second.first);
         }
 
@@ -40,6 +55,11 @@ public:
 
     const Grammar* find(const std::string& key) const
     {
+        if (!allowRareLanguages && isRareLanguage(key))
+        {
+            return nullptr;
+        }
+
         const auto& value = m_languages.find(key);
         if (value != m_languages.end())
         {

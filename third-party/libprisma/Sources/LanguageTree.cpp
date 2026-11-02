@@ -182,3 +182,21 @@ const Grammar* LanguageTree::resolveGrammar(size_t path)
 {
     return m_grammars[path].get();
 }
+
+bool LanguageTree::allowRareLanguages = false;
+
+static bool isRareLanguageName(const std::string& key) {
+    static const char* rare[] = {
+        "brainfuck","lolcode","bqn","gap","magma","ichigojam","inform7",
+        "false","factor","hoon","j","mizar","nevod","parigp","q","smalltalk",
+        "wren","zig","brightscript",
+    };
+    for (const char* r : rare) {
+        if (key == r) return true;
+    }
+    return false;
+}
+
+bool LanguageTree::isRareLanguage(const std::string& key) {
+    return isRareLanguageName(key);
+}

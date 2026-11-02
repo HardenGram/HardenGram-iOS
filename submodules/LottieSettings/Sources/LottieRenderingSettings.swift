@@ -18,5 +18,5 @@ public struct LottieRenderingSettings: Equatable {
     ///
     /// This is NOT the product default. Where an app configuration exists the
     /// resolved backend is .tlottie unless the server killswitch says otherwise.
-    public static let noAccountFallback = LottieRenderingSettings(backend: .rlottie)
+    public static let noAccountFallback = LottieRenderingSettings(backend: .tlottie)
 }
